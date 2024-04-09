@@ -9,51 +9,79 @@ use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 /** @var FieldInterface $field */
 $field = $block->getField();
 $fieldValue = $block->getValue();
-$fieldName = $field->getFieldName();
+$fieldLabel = $block->getFieldLabel();
+$fieldName = $block->getFieldName();
+if (empty($fieldName)) {
+    $fieldName = $field->getFieldName();
+}
+
+$searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl());
 $modalId = $fieldName . '-search-modal';
 ?>
-<div>
-    <div class="id-preview-container">
-        <div class="admin__control-addon id-preview">
-            <input class="admin__control-text" type="text" id="<?= $fieldName ?>" name="<?= $fieldName ?>" placeholder="Numeric ID"
-                   value="<?= $fieldValue ?>" maxLength="11"/>
-            <label class="admin__addon-suffix" for="<?= $fieldName ?>" id="<?= $fieldName ?>-preview">
-                <span><?= __('No data found') ?></span>
+    <div class="admin__field">
+        <div class="admin__field-label" data-bind="visible: $data.labelVisible">
+            <label for="<?= $fieldName ?>">
+                <span><?= $fieldLabel ?></span>
             </label>
         </div>
 
-        <div class="button">
-            <small>
-                <a href="<?= $block->getUrl('simple_search/grid/product') ?>">debug</a>
-                <button class="<?= $fieldName ?>-search-modal-open">Search</button>
-            </small>
+        <div class="admin__field-control">
+            <div>
+                <div class="id-preview-container">
+                    <div class="admin__control-addon id-preview">
+                        <input class="admin__control-text" type="text" id="<?= $fieldName ?>" name="<?= $fieldName ?>"
+                               placeholder="Numeric ID"
+                               value="<?= $fieldValue ?>" maxLength="11"/>
+                        <label class="admin__addon-suffix" for="<?= $fieldName ?>" id="<?= $fieldName ?>-preview">
+                            <span><?= __('No data found') ?></span>
+                        </label>
+                    </div>
+
+                    <div class="button">
+                        <small>
+                            <a href="<?= $searchAjaxUrl ?>">debug</a>
+                            <button class="<?= $fieldName ?>-search-modal-open">Search</button>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div id="<?= $modalId ?>" style="display:none;">
+                <iframe class="simple_search"></iframe>
+            </div>
         </div>
     </div>
 
-    <div id="<?= $modalId ?>" style="display:none;">
-        <iframe class="simple_search"></iframe>
-    </div>
-</div>
+    <style>
+        .modal-content {
+            position: relative;
+        }
 
-<style>
-    .modal-content {
-        position:relative;
-    }
-    
-    iframe.simple_search {
-        width:100%;
-        height:100%;
-        border: 0;
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        right: 10px;
-        bottom: 10px;
-    }
-    
-    .modal-content {
-        height: 100%;
-    }
-</style>
+        iframe.simple_search {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+        }
+
+        .modal-content {
+            height: 100%;
+        }
+
+        .admin__fieldset .admin__field .admin__field-control {
+            width: calc((100%) * 0.5 - 30px);
+            float: left;
+            margin-left: 30px;
+        }
+
+        .admin__fieldset .admin__field .admin__field-label {
+            width: calc((100%)* 0.25 - 30px);
+            float: left;
+            margin-left: 30px;
+        }
+    </style>
 
 <?= $block->getChildHtml('script') ?>

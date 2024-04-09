@@ -11,7 +11,8 @@ $field = $block->getField();
 $gridLabel = $field->getGridLabel();
 $fieldName = $field->getFieldName();
 $modalId = $fieldName . '-search-modal';
-$previewUrl = $this->getUrl('simple_search/preview/product_label');
+$searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl(), ['modal_id' => $modalId]);
+$previewUrl = $block->getUrl($field->getLabelAjaxUrl());
 ?>
 <script>
     require([
@@ -40,15 +41,11 @@ $previewUrl = $this->getUrl('simple_search/preview/product_label');
 
             $(".<?= $fieldName ?>-search-modal-open").on('click', function () {
                 $modal.modal("openModal");
-                $iframe.attr('src', '<?= $block->getUrl('simple_search/grid/product', [
-                    'modal_id' => $modalId
-                ]) ?>');
+                $iframe.attr('src', '<?= $searchAjaxUrl ?>');
             });
 
             $input.on('change', function (event) {
-                
-                const previewUrl = '<?= $block->getUrl('simple_search/preview/product') ?>'
-                    + '?id=' + event.target.value;
+                const previewUrl = '<?= $previewUrl ?>' + '?id=' + event.target.value;
 
                 $.ajax({
                     url: previewUrl,

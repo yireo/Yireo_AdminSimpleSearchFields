@@ -12,6 +12,11 @@ $modalId = (string)$block->getRequest()->getParam('modal_id');
 $itemProvider = $field->getItemProvider();
 $fields = (array)$block->getFields();
 $items = (array)$itemProvider->getItems();
+
+function getData($entity, $name) {
+    $method = 'get' . str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
+    return call_user_func([$entity, $method]);
+}
 ?>
 <table class="data-grid">
     <thead>
@@ -37,7 +42,7 @@ $items = (array)$itemProvider->getItems();
                 <?php
                 foreach ($fields as $fieldName => $fieldLabel): ?>
                     <td onClick="onRowClick(<?= $item->getId() ?>)">
-                        <?= $item->getData($fieldName) ?>
+                        <?= getData($item, $fieldName) ?>
                     </td>
                 <?php
                 endforeach; ?>

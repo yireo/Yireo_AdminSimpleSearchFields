@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:View/Layout:etc/page_configuration.xsd"
+      layout="admin-blank">
+    <body>
+        <referenceContainer name="menu.wrapper" remove="true"/>
+        <referenceContainer name="js" remove="true"/>
+        <referenceContainer name="content">
+            <block name="customer.search.grid" as="modal" template="Yireo_AdminSimpleSearchFields::search/grid.phtml">
+                <block name="customer.search.grid.search" as="search"
+                       template="Yireo_AdminSimpleSearchFields::search/grid/search.phtml">
+                    <arguments>
+                        <argument name="field" xsi:type="object">
+                            Yireo\AdminSimpleSearchFields\ViewModel\CustomerField
+                        </argument>
+                    </arguments>
+                </block>
+
+                <block name="customer.search.grid.table" as="table"
+                       template="Yireo_AdminSimpleSearchFields::search/grid/table.phtml">
+                    <arguments>
+                        <argument name="field" xsi:type="object">
+                            Yireo\AdminSimpleSearchFields\ViewModel\CustomerField
+                        </argument>
+                        <argument name="empty_label" xsi:type="string">No customer data found</argument>
+                        <argument name="fields" xsi:type="array">
+                            <item name="entity_id" xsi:type="string">ID</item>
+                            <item name="first_name" xsi:type="string">First name</item>
+                            <item name="last_name" xsi:type="string">Last name</item>
+                            <item name="email" xsi:type="string">Email</item>
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

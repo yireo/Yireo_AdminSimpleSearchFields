@@ -11,22 +11,22 @@ declare(strict_types=1);
 
 namespace Yireo\AdminSimpleSearchFields\Controller\Adminhtml\Preview;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Request\Http;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
-class Product implements HttpPostActionInterface, HttpGetActionInterface
+class Order implements HttpPostActionInterface, HttpGetActionInterface
 {
     /**
-     * @param ProductRepositoryInterface $productRepository
+     * @param OrderRepositoryInterface $orderRepository
      * @param Http $request
      * @param JsonFactory $resultJsonFactory
      */
     public function __construct(
-        private ProductRepositoryInterface $productRepository,
+        private OrderRepositoryInterface $orderRepository,
         private Http $request,
         private JsonFactory $resultJsonFactory
     ) {
@@ -40,12 +40,12 @@ class Product implements HttpPostActionInterface, HttpGetActionInterface
         }
         
         try {
-            $product = $this->productRepository->getById($id);
+            $order = $this->orderRepository->get($id);
         } catch (NoSuchEntityException $e) {
             return $this->json('No data found');
         }
         
-        return $this->json($product->getName() . ' (' . $product->getSku() . ')');
+        return $this->json($order->getIncrementId() . ' (' . $order->getEntityId() . ')');
     }
     
     private function json($text)

@@ -4,16 +4,16 @@ declare(strict_types=1);
 namespace Yireo\AdminSimpleSearchFields\ViewModel;
 
 use Yireo\AdminSimpleSearchFields\DataProvider\ItemProviderInterface;
-use Yireo\AdminSimpleSearchFields\DataProvider\ProductProvider;
+use Yireo\AdminSimpleSearchFields\DataProvider\OrderProvider;
 
-class ProductField implements FieldInterface
+class OrderField implements FieldInterface
 {
     public function __construct(
-        private readonly ProductProvider $itemProvider,
-        private readonly string $fieldName = 'product_id',
-        private readonly string $gridLabel = 'Select a product',
-        private readonly string $labelAjaxUrl = 'simple_search/preview/product',
-        private readonly string $searchAjaxUrl = 'simple_search/grid/product',
+        private readonly OrderProvider $itemProvider,
+        private readonly string $fieldName = 'order_id',
+        private readonly string $gridLabel = 'Select a order',
+        private readonly string $labelAjaxUrl = 'simple_search/preview/order',
+        private readonly string $searchAjaxUrl = 'simple_search/grid/order',
     ) {
     }
     

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:View/Layout:etc/page_configuration.xsd"
+      layout="admin-blank">
+    <body>
+        <referenceContainer name="menu.wrapper" remove="true"/>
+        <referenceContainer name="js" remove="true"/>
+        <referenceContainer name="content">
+            <block name="product.search.grid" as="modal" template="Yireo_AdminSimpleSearchFields::search/grid.phtml">
+                <block name="product.search.grid.search" as="search"
+                       template="Yireo_AdminSimpleSearchFields::search/grid/search.phtml">
+                    <arguments>
+                        <argument name="field" xsi:type="object">
+                            Yireo\AdminSimpleSearchFields\ViewModel\ProductField
+                        </argument>
+                    </arguments>
+                </block>
+
+                <block name="product.search.grid.table" as="table"
+                       template="Yireo_AdminSimpleSearchFields::search/grid/table.phtml">
+                    <arguments>
+                        <argument name="field" xsi:type="object">
+                            Yireo\AdminSimpleSearchFields\ViewModel\ProductField
+                        </argument>
+                        <argument name="empty_label" xsi:type="string">No product data found</argument>
+                        <argument name="fields" xsi:type="array">
+                            <item name="entity_id" xsi:type="string">ID</item>
+                            <item name="sku" xsi:type="string">SKU</item>
+                            <item name="name" xsi:type="string">Name</item>
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

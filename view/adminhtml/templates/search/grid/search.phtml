@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
+
+/** @var Template $block */
+/** @var FieldInterface $field */
+$domId = str_replace('.', '-', $block->getNameInLayout());
+$searchId = $domId . '-search-input';
+$field = $block->getField();
+$itemProvider = $field->getItemProvider();
+$search = $itemProvider->getSearch();
+?>
+<div class="data-grid-search-control-wrap">
+    <label class="data-grid-search-label" title="Search" for="fulltext">
+        <span>Search</span>
+    </label>
+    <input class="admin__control-text data-grid-search-control" type="text" id="<?= $searchId ?>"
+           placeholder="Search by keyword" value="<?= $search ?>" aria-label="Search by keyword"
+           onBlur="onSearch()" onChange="onSearch()">
+    <button class="action-submit" type="button" aria-label="Search" onClick="onSearch()">
+        <span>Search</span>
+    </button>
+</div>
+
+<script>
+    function onSearch() {
+        var search = document.getElementById('<?= $searchId ?>').value;
+        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.search', {detail: {search}}));
+    }
+</script>

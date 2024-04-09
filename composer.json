@@ -1,0 +1,20 @@
+{
+  "name": "yireo/module-admin-simple-search-fields",
+  "version": "1.0.0",
+  "description": "Simple approach to add search fields to other modules",
+  "type": "magento2-module",
+  "require": {
+    "magento/framework": "*"
+  },
+  "license": [
+    "OSL-3.0"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Yireo\\AdminSimpleSearchFields\\": ""
+    }
+  }
+}

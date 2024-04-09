@@ -1,0 +1,68 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
+
+/** @var Template $block */
+/** @var FieldInterface $field */
+$field = $block->getField();
+$modalId = (string)$block->getRequest()->getParam('modal_id');
+$itemProvider = $field->getItemProvider();
+$fields = (array)$block->getFields();
+$items = (array)$itemProvider->getItems();
+?>
+<table class="data-grid">
+    <thead>
+    <tr>
+        <?php
+        foreach ($fields as $fieldName => $fieldLabel): ?>
+            <th class="data-grid-multicheck-cell _sortable _draggable">
+                <button style="background-color: inherit; color: inherit; border: none" onClick="reorder">
+                    <?= $fieldLabel ?>
+                </button>
+            </th>
+        <?php
+        endforeach; ?>
+        <th class="data-grid-multicheck-cell">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php
+    if (count($items) > 0): ?>
+        <?php
+        foreach ($items as $item): ?>
+            <tr class="data-row_even_row data-row_odd_row">
+                <?php
+                foreach ($fields as $fieldName => $fieldLabel): ?>
+                    <td onClick="onRowClick(<?= $item->getId() ?>)">
+                        <?= $item->getData($fieldName) ?>
+                    </td>
+                <?php
+                endforeach; ?>
+                <td>
+                    <button type="button" data-role="closeBtn" onClick="onRowClick(<?= $item->getId() ?>)">
+                        <span>Select</span>
+                    </button>
+                </td>
+            </tr>
+        
+        <?php
+        endforeach; ?>
+    <?php
+    else: ?>
+        <tr class="data-row">
+            <td colSpan="4">No items found</td>
+        </tr>
+    <?php
+    endif; ?>
+    </tbody>
+</table>
+
+<script>
+    function onRowClick(itemId) {
+        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.modal.close', {detail: {modalId: '<?= $modalId ?>'}}));
+        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.value.change', {detail: {itemId}}));
+    }
+</script>

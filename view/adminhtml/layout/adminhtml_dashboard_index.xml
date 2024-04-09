@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:View/Layout:etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block name="product.search.field" template="Yireo_AdminSimpleSearchFields::search/field.phtml">
+                <arguments>
+                    <argument name="field" xsi:type="object">Yireo\AdminSimpleSearchFields\ViewModel\ProductField
+                    </argument>
+                </arguments>
+
+                <block name="product.search.field.script" as="script"
+                       template="Yireo_AdminSimpleSearchFields::search/field/script.phtml">
+                    <arguments>
+                        <argument name="field" xsi:type="object">Yireo\AdminSimpleSearchFields\ViewModel\ProductField
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

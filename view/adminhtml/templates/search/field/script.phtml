@@ -1,0 +1,84 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
+
+/** @var Template $block */
+/** @var FieldInterface $field */
+$field = $block->getField();
+$gridLabel = $field->getGridLabel();
+$fieldName = $field->getFieldName();
+$modalId = $fieldName . '-search-modal';
+$previewUrl = $this->getUrl('simple_search/preview/product_label');
+?>
+<script>
+    require([
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ], function ($, modal) {
+            var options = {
+                type: 'slide',
+                title: '<?= $gridLabel ?>',
+                responsive: true,
+                innerScroll: true,
+                buttons: [{
+                    text: $.mage.__('Close'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            var $modal = $('#<?= $modalId ?>');
+            var $iframe = $('#<?= $modalId ?> iframe');
+            var $input = $('#<?= $fieldName ?>');
+            var $preview = $('#<?= $fieldName ?>-preview');
+            var popup = modal(options, $modal);
+
+            $(".<?= $fieldName ?>-search-modal-open").on('click', function () {
+                $modal.modal("openModal");
+                $iframe.attr('src', '<?= $block->getUrl('simple_search/grid/product', [
+                    'modal_id' => $modalId
+                ]) ?>');
+            });
+
+            $input.on('change', function (event) {
+                
+                const previewUrl = '<?= $block->getUrl('simple_search/preview/product') ?>'
+                    + '?id=' + event.target.value;
+
+                $.ajax({
+                    url: previewUrl,
+                    data: {form_key: window.FORM_KEY},
+                    type: 'POST',
+                    dataType: 'json',
+                }).done(function (data) {
+                    $preview.html(data.text);
+                });
+            });
+
+            window.addEventListener('simple_search_grid.modal.close', function (event) {
+                if (event.detail.modalId !== '<?= $modalId ?>') {
+                    console.log('Unknown modal ID: ' + event.detail.modalId);
+                    return;
+                }
+
+                popup.closeModal();
+            });
+
+            window.addEventListener('simple_search_grid.value.change', function (event) {
+                const itemId = event.detail.itemId;
+                $input.val(itemId).trigger('change');
+            });
+
+            window.addEventListener('simple_search_grid.search', function (event) {
+                $iframe.attr('src', '<?= $block->getUrl('simple_search/grid/product', [
+                    'modal_id' => $modalId
+                ]) ?>' + 'search/' + event.detail.search + '/');
+            });
+        }
+    );
+</script>

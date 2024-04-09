@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+?>
+<div class="admin__data-grid-outer-wrap">
+    <div class="admin__data-grid-header">
+        <div class="admin__data-grid-header-row">
+            <?= $block->getChildHtml('search') ?>
+        </div>
+    </div>
+
+    <div class="admin__data-grid-wrap">
+        <?= $block->getChildHtml('table') ?>
+    </div>
+</div>
+
+<script>
+    require();
+</script>

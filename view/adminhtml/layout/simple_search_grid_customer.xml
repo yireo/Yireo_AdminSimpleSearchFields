@@ -24,7 +24,7 @@
                         </argument>
                         <argument name="empty_label" xsi:type="string">No customer data found</argument>
                         <argument name="fields" xsi:type="array">
-                            <item name="entity_id" xsi:type="string">ID</item>
+                            <item name="id" xsi:type="string">ID</item>
                             <item name="first_name" xsi:type="string">First name</item>
                             <item name="last_name" xsi:type="string">Last name</item>
                             <item name="email" xsi:type="string">Email</item>

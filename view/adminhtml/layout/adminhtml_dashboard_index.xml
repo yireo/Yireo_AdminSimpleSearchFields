@@ -8,14 +8,6 @@
                     <argument name="field" xsi:type="object">Yireo\AdminSimpleSearchFields\ViewModel\ProductField
                     </argument>
                 </arguments>
-
-                <block name="product.search.field.script" as="script"
-                       template="Yireo_AdminSimpleSearchFields::search/field/script.phtml">
-                    <arguments>
-                        <argument name="field" xsi:type="object">Yireo\AdminSimpleSearchFields\ViewModel\ProductField
-                        </argument>
-                    </arguments>
-                </block>
             </block>
         </referenceContainer>
     </body>

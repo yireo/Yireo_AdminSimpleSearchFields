@@ -17,6 +17,7 @@ if (empty($fieldName)) {
 
 $searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl());
 $modalId = $fieldName . '-search-modal';
+$debug = false;
 ?>
     <div class="admin__field">
         <div class="admin__field-label">
@@ -39,7 +40,9 @@ $modalId = $fieldName . '-search-modal';
 
                     <div class="button">
                         <small>
+                            <?php if ($debug): ?>
                             <a href="<?= $searchAjaxUrl ?>">debug</a>
+                            <?php endif; ?>
                             <button class="<?= $fieldName ?>-search-modal-open">Search</button>
                         </small>
                     </div>
@@ -84,4 +87,8 @@ $modalId = $fieldName . '-search-modal';
         }
     </style>
 
-<?= $block->getChildHtml('script') ?>
+<?= $block->getLayout()->createBlock(Template::class)
+    ->setTemplate('Yireo_AdminSimpleSearchFields::search/field/script.phtml')
+    ->setField($field)
+    ->toHtml(); ?>
+

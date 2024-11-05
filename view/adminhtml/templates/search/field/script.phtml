@@ -10,8 +10,12 @@ use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 $field = $block->getField();
 $gridLabel = $field->getGridLabel();
 $fieldName = $field->getFieldName();
-$modalId = $fieldName . '-search-modal';
-$searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl(), ['modal_id' => $modalId]);
+$modalId = $fieldName.'-search-modal';
+$searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl(), [
+    'field_id' => $fieldName,
+    'modal_id' => $modalId
+]);
+
 $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
 ?>
 <script>
@@ -59,7 +63,6 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
 
             window.addEventListener('simple_search_grid.modal.close', function (event) {
                 if (event.detail.modalId !== '<?= $modalId ?>') {
-                    console.log('Unknown modal ID: ' + event.detail.modalId);
                     return;
                 }
 
@@ -68,12 +71,15 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
 
             window.addEventListener('simple_search_grid.value.change', function (event) {
                 const itemId = event.detail.itemId;
-                $input.val(itemId).trigger('change');
+                const fieldId = event.detail.fieldId;
+                if ($input.attr('id') === fieldId) {
+                    $input.val(itemId).trigger('change');
+                }
             });
 
             window.addEventListener('simple_search_grid.search', function (event) {
                 $iframe.attr('src', '<?= $block->getUrl('simple_search/grid/product', [
-                    'modal_id' => $modalId
+                    'modal_id' => $modalId,
                 ]) ?>' + 'search/' + event.detail.search + '/');
             });
         }

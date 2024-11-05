@@ -9,12 +9,15 @@ use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 /** @var FieldInterface $field */
 $field = $block->getField();
 $modalId = (string)$block->getRequest()->getParam('modal_id');
+$fieldId = (string)$block->getRequest()->getParam('field_id');
+
 $itemProvider = $field->getItemProvider();
 $fields = (array)$block->getFields();
 $items = (array)$itemProvider->getItems();
 
 function getData($entity, $name) {
-    $method = 'get' . str_replace(' ', '', ucwords(str_replace('-', ' ', $name)));
+    $words = preg_replace('/([-\_]+)/', ' ', $name);
+    $method = 'get' . str_replace(' ', '', ucwords($words));
     return call_user_func([$entity, $method]);
 }
 ?>
@@ -52,7 +55,7 @@ function getData($entity, $name) {
                     </button>
                 </td>
             </tr>
-        
+
         <?php
         endforeach; ?>
     <?php
@@ -67,7 +70,17 @@ function getData($entity, $name) {
 
 <script>
     function onRowClick(itemId) {
-        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.modal.close', {detail: {modalId: '<?= $modalId ?>'}}));
-        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.value.change', {detail: {itemId}}));
+        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.modal.close', {
+            detail: {
+                modalId: '<?= $modalId ?>'
+            }
+        }));
+        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.value.change', {
+            detail: {
+                modalId: '<?= $modalId ?>',
+                fieldId: '<?= $fieldId ?>',
+                itemId: itemId
+            }
+        }));
     }
 </script>

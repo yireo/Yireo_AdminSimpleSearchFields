@@ -18,6 +18,7 @@ if (empty($fieldName)) {
 $searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl());
 $modalId = $fieldName . '-search-modal';
 $debug = false;
+$provider = $block->getProvider();
 ?>
     <div class="admin__field">
         <div class="admin__field-label">
@@ -86,6 +87,17 @@ $debug = false;
             margin-left: 30px;
         }
     </style>
+
+<?php if (!empty($provider)): ?>
+<script>
+    require(['uiRegistry', 'jquery'], function(registry, $) {
+        const component = registry.get('<?= $provider ?>');
+        const $field = $('#<?= $fieldName ?>');
+        if ($field) {
+            $field.val(component.data.<?= $fieldName ?>);
+        }
+    });
+</script>
 
 <?= $block->getLayout()->createBlock(Template::class)
     ->setTemplate('Yireo_AdminSimpleSearchFields::search/field/script.phtml')

@@ -8,9 +8,11 @@ use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 /** @var Template $block */
 /** @var FieldInterface $field */
 $field = $block->getField();
+$provider = $block->getProvider();
+$fieldValue = $block->getValue();
 $gridLabel = $field->getGridLabel();
-$fieldName = $field->getFieldName();
-$modalId = $fieldName.'-search-modal';
+$fieldName = $block->getFieldName() ?? $field->getFieldName();
+$modalId = $fieldName . '-search-modal';
 $searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl(), [
     'field_id' => $fieldName,
     'modal_id' => $modalId
@@ -20,68 +22,83 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
 ?>
 <script>
     require([
-            'jquery',
-            'Magento_Ui/js/modal/modal'
-        ], function ($, modal) {
-            var options = {
-                type: 'slide',
-                title: '<?= $gridLabel ?>',
-                responsive: true,
-                innerScroll: true,
-                buttons: [{
-                    text: $.mage.__('Close'),
-                    class: '',
-                    click: function () {
-                        this.closeModal();
-                    }
-                }]
-            };
-
-            var $modal = $('#<?= $modalId ?>');
-            var $iframe = $('#<?= $modalId ?> iframe');
-            var $input = $('#<?= $fieldName ?>');
-            var $preview = $('#<?= $fieldName ?>-preview');
-            var popup = modal(options, $modal);
-
-            $(".<?= $fieldName ?>-search-modal-open").on('click', function () {
-                $modal.modal("openModal");
-                $iframe.attr('src', '<?= $searchAjaxUrl ?>');
-            });
-
-            $input.on('change', function (event) {
-                const previewUrl = '<?= $previewUrl ?>' + '?id=' + event.target.value;
-
-                $.ajax({
-                    url: previewUrl,
-                    data: {form_key: window.FORM_KEY},
-                    type: 'POST',
-                    dataType: 'json',
-                }).done(function (data) {
-                    $preview.html(data.text);
-                });
-            });
-
-            window.addEventListener('simple_search_grid.modal.close', function (event) {
-                if (event.detail.modalId !== '<?= $modalId ?>') {
-                    return;
+        'jquery',
+        'uiRegistry',
+        'Magento_Ui/js/modal/modal'
+    ], function ($, registry, modal) {
+        var options = {
+            type: 'slide',
+            title: '<?= $gridLabel ?>',
+            responsive: true,
+            innerScroll: true,
+            buttons: [{
+                text: $.mage.__('Close'),
+                class: '',
+                click: function () {
+                    this.closeModal();
                 }
+            }]
+        };
 
-                popup.closeModal();
-            });
+        var $modal = $('#<?= $modalId ?>');
+        var $iframe = $('#<?= $modalId ?> iframe');
+        var $input = $('#<?= $fieldName ?>');
+        var $preview = $('#<?= $fieldName ?>-preview');
+        var popup = modal(options, $modal);
 
-            window.addEventListener('simple_search_grid.value.change', function (event) {
-                const itemId = event.detail.itemId;
-                const fieldId = event.detail.fieldId;
-                if ($input.attr('id') === fieldId) {
-                    $input.val(itemId).trigger('change');
-                }
-            });
+        $(".<?= $fieldName ?>-search-modal-open").on('click', function () {
+            $modal.modal("openModal");
+            $iframe.attr('src', '<?= $searchAjaxUrl ?>');
+        });
 
-            window.addEventListener('simple_search_grid.search', function (event) {
-                $iframe.attr('src', '<?= $block->getUrl('simple_search/grid/product', [
-                    'modal_id' => $modalId,
-                ]) ?>' + 'search/' + event.detail.search + '/');
+        $input.on('change', function (event) {
+            const previewUrl = '<?= $previewUrl ?>' + '?id=' + event.target.value;
+
+            $.ajax({
+                url: previewUrl,
+                data: {form_key: window.FORM_KEY},
+                type: 'POST',
+                dataType: 'json',
+            }).done(function (data) {
+                $preview.html(data.text);
             });
+        });
+
+        window.addEventListener('simple_search_grid.modal.close', function (event) {
+            if (event.detail.modalId !== '<?= $modalId ?>') {
+                return;
+            }
+
+            popup.closeModal();
+        });
+
+        window.addEventListener('simple_search_grid.value.change', function (event) {
+            const itemId = event.detail.itemId;
+            const fieldId = event.detail.fieldId;
+            if ($input.attr('id') === fieldId) {
+                $input.val(itemId).trigger('change');
+            }
+        });
+
+        window.addEventListener('simple_search_grid.search', function (event) {
+            $iframe.attr('src', '<?= $block->getUrl('simple_search/grid/product', [
+                'modal_id' => $modalId,
+            ]) ?>' + 'search/' + event.detail.search + '/');
+        });
+
+        <?php if (!empty($provider) && !empty($fieldName)): ?>
+        const component = registry.get('<?= $provider ?>');
+        const $field = $('#<?= $fieldName ?>');
+        if ($field) {
+            $field.val(component.data.<?= $fieldName ?>);
+            console.log('<?= $fieldName ?>', component.data.<?= $fieldName ?>);
+            $field.change(function () {
+                component.data.<?= $fieldName ?> = $field.val();
+            });
+            $field.trigger("change");
+        } else {
+            console.warning('Field ID "<?= $fieldName ?>" does not exist');
         }
-    );
+        <?php endif; ?>
+    });
 </script>

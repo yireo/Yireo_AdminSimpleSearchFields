@@ -95,6 +95,9 @@ $provider = $block->getProvider();
         const $field = $('#<?= $fieldName ?>');
         if ($field) {
             $field.val(component.data.<?= $fieldName ?>);
+            $field.change(function() {
+                component.data.<?= $fieldName ?> = $field.val();
+            });
         }
     });
 </script>

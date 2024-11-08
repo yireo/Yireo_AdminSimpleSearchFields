@@ -1,0 +1,14 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+?>
+<script>
+    window.yireoAdminSimpleSearchFields = {
+        customerLabelAjaxUrl: '<?= $block->getUrl('simple_search/preview/customer') ?>',
+        productLabelAjaxUrl: '<?= $block->getUrl('simple_search/preview/product') ?>',
+        orderLabelAjaxUrl: '<?= $block->getUrl('simple_search/preview/order') ?>'
+    };
+</script>

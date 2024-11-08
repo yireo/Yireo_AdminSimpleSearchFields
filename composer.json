@@ -1,6 +1,6 @@
 {
   "name": "yireo/magento2-admin-simple-search-fields",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Simple approach to add search fields to other modules",
   "type": "magento2-module",
   "require": {

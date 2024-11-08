@@ -36,24 +36,33 @@ class Customer implements HttpPostActionInterface, HttpGetActionInterface
     {
         $id = (int) $this->request->getParam('id');
         if (!$id > 0) {
-            return $this->json('No data found');
+            return $this->json(['text' => 'No data found']);
         }
 
         try {
             $customer = $this->customerRepository->getById($id);
         } catch (NoSuchEntityException $e) {
-            return $this->json('No data found');
+            return $this->json(['text' => 'No data found']);
         }
 
         $name = [];
         $name[] = $customer->getFirstname();
         $name[] = $customer->getLastname();
+        $fullName =implode(' ', $name);
 
-        return $this->json(implode(' ', $name) . ' &lt;' . $customer->getEmail() . '&gt;');
+        $data = [
+            'text' => $fullName . ' &lt;' . $customer->getEmail() . '&gt;',
+            'firstname' => $customer->getFirstname(),
+            'lastname' => $customer->getLastname(),
+            'name' => $fullName,
+            'email' => $customer->getEmail(),
+        ];
+
+        return $this->json($data);
     }
 
-    private function json($text)
+    private function json(array $data)
     {
-        return $this->resultJsonFactory->create()->setData(['text' => $text]);
+        return $this->resultJsonFactory->create()->setData($data);
     }
 }

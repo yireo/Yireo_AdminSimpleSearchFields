@@ -8,8 +8,9 @@ use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 /** @var Template $block */
 /** @var FieldInterface $field */
 $domId = str_replace('.', '-', $block->getNameInLayout());
-$searchId = $domId . '-search-input';
+$searchId = $domId.'-search-input';
 $field = $block->getField();
+$fieldId = (string)$block->getRequest()->getParam('field_id');
 $itemProvider = $field->getItemProvider();
 $search = $itemProvider->getSearch();
 ?>
@@ -19,7 +20,7 @@ $search = $itemProvider->getSearch();
     </label>
     <input class="admin__control-text data-grid-search-control" type="text" id="<?= $searchId ?>"
            placeholder="Search by keyword" value="<?= $search ?>" aria-label="Search by keyword"
-           onBlur="onSearch()" onChange="onSearch()">
+           onBlur="onSearch()" onKeyUp="onSearch()">
     <button class="action-submit" type="button" aria-label="Search" onClick="onSearch()">
         <span>Search</span>
     </button>
@@ -28,6 +29,11 @@ $search = $itemProvider->getSearch();
 <script>
     function onSearch() {
         var search = document.getElementById('<?= $searchId ?>').value;
-        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.search', {detail: {search}}));
+        window.top.dispatchEvent(new CustomEvent('simple_search_grid.search', {
+            detail: {
+                search: search,
+                fieldId: '<?= $fieldId ?>',
+            }
+        }));
     }
 </script>

@@ -10,7 +10,6 @@ use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 $field = $block->getField();
 $modalId = (string)$block->getRequest()->getParam('modal_id');
 $fieldId = (string)$block->getRequest()->getParam('field_id');
-
 $itemProvider = $field->getItemProvider();
 $fields = (array)$block->getFields();
 $items = (array)$itemProvider->getItems();
@@ -27,7 +26,7 @@ function getData($entity, $name) {
         <?php
         foreach ($fields as $fieldName => $fieldLabel): ?>
             <th class="data-grid-multicheck-cell _sortable _draggable">
-                <button style="background-color: inherit; color: inherit; border: none" onClick="reorder">
+                <button style="background-color: inherit; color: inherit; border: none" onClick="reorder" data-field="<?= $fieldName ?>">
                     <?= $fieldLabel ?>
                 </button>
             </th>
@@ -69,13 +68,17 @@ function getData($entity, $name) {
 </table>
 
 <script>
+    function reorder(event) {
+        console.log('reorder field', event.target.article.dataset.field);
+    }
+
     function onRowClick(itemId) {
-        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.modal.close', {
+        window.top.dispatchEvent(new CustomEvent('simple_search_grid.modal.close', {
             detail: {
                 modalId: '<?= $modalId ?>'
             }
         }));
-        window.parent.dispatchEvent(new CustomEvent('simple_search_grid.value.change', {
+        window.top.dispatchEvent(new CustomEvent('simple_search_grid.value.change', {
             detail: {
                 modalId: '<?= $modalId ?>',
                 fieldId: '<?= $fieldId ?>',

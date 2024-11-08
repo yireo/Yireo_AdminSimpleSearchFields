@@ -12,6 +12,7 @@ $provider = $block->getProvider();
 $fieldValue = $block->getValue();
 $gridLabel = $field->getGridLabel();
 $fieldName = $block->getFieldName() ?? $field->getFieldName();
+$fieldId = (string)$block->getRequest()->getParam('field_id');
 $modalId = $fieldName . '-search-modal';
 $searchAjaxUrl = $block->getUrl($field->getSearchAjaxUrl(), [
     'field_id' => $fieldName,
@@ -81,9 +82,11 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
         });
 
         window.addEventListener('simple_search_grid.search', function (event) {
-            $iframe.attr('src', '<?= $block->getUrl('simple_search/grid/product', [
+            const searchUrl ='<?= $block->getUrl($field->getSearchAjaxUrl(), [
                 'modal_id' => $modalId,
-            ]) ?>' + 'search/' + event.detail.search + '/');
+                'field_id' => $fieldName,
+            ]) ?>' + 'search/' + event.detail.search + '/';
+            $iframe.attr('src', searchUrl);
         });
 
         <?php if (!empty($provider) && !empty($fieldName)): ?>
@@ -91,7 +94,6 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
         const $field = $('#<?= $fieldName ?>');
         if ($field) {
             $field.val(component.data.<?= $fieldName ?>);
-            console.log('<?= $fieldName ?>', component.data.<?= $fieldName ?>);
             $field.change(function () {
                 component.data.<?= $fieldName ?> = $field.val();
             });

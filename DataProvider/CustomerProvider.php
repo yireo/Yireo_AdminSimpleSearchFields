@@ -18,18 +18,18 @@ class CustomerProvider extends AbstractItemProvider
     ) {
         parent::__construct($searchCriteriaBuilder, $filterBuilder, $request);
     }
-    
+
     public function getItems(): array
     {
         return $this->customerRepository->getList($this->getSearchCriteria())->getItems();
     }
-    
+
     public function getSearchableFields(): array
     {
         return [
-            'first_name',
-            'middle_name',
-            'last_name',
+            'firstname',
+            'middlename',
+            'lastname',
             'email',
         ];
     }

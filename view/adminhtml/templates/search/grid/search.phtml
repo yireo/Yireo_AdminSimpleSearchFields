@@ -20,7 +20,7 @@ $search = $itemProvider->getSearch();
     </label>
     <input class="admin__control-text data-grid-search-control" type="text" id="<?= $searchId ?>"
            placeholder="Search by keyword" value="<?= $search ?>" aria-label="Search by keyword"
-           onBlur="onSearch()" onKeyUp="onSearch()">
+           onChange="onSearch()">
     <button class="action-submit" type="button" aria-label="Search" onClick="onSearch()">
         <span>Search</span>
     </button>

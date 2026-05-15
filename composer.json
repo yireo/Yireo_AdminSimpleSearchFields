@@ -4,7 +4,7 @@
   "description": "Simple approach to add search fields to other modules",
   "type": "magento2-module",
   "require": {
-    "magento/framework": "*"
+    "magento/framework": "^103.0"
   },
   "license": [
     "OSL-3.0"

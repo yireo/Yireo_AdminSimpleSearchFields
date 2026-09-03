@@ -8,7 +8,7 @@
 <!-- badges.specs.end -->
 
 
-> This Magento 2 module is an add-on package to the LokiCheckout.
+> This Magento 2 module is deprecated in favor of [Loki_AdminComponents](https://loki-extensions.com/admin-components)
 
 ### Installation
 Install this package via composer:

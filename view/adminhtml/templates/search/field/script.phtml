@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
 /** @var FieldInterface $field */
 $field = $block->getField();
 $provider = $block->getProvider();
@@ -29,7 +31,7 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
     ], function ($, registry, modal) {
         var options = {
             type: 'slide',
-            title: '<?= $gridLabel ?>',
+            title: '<?= $escaper->escapeJs((string)$gridLabel) ?>',
             responsive: true,
             innerScroll: true,
             buttons: [{
@@ -41,19 +43,19 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
             }]
         };
 
-        var $modal = $('#<?= $modalId ?>');
-        var $iframe = $('#<?= $modalId ?> iframe');
-        var $input = $('#<?= $fieldName ?>');
-        var $preview = $('#<?= $fieldName ?>-preview');
+        var $modal = $('#<?= $escaper->escapeJs((string)$modalId) ?>');
+        var $iframe = $('#<?= $escaper->escapeJs((string)$modalId) ?> iframe');
+        var $input = $('#<?= $escaper->escapeJs((string)$fieldName) ?>');
+        var $preview = $('#<?= $escaper->escapeJs((string)$fieldName) ?>-preview');
         var popup = modal(options, $modal);
 
-        $(".<?= $fieldName ?>-search-modal-open").on('click', function () {
+        $(".<?= $escaper->escapeJs((string)$fieldName) ?>-search-modal-open").on('click', function () {
             $modal.modal("openModal");
-            $iframe.attr('src', '<?= $searchAjaxUrl ?>');
+            $iframe.attr('src', '<?= $escaper->escapeJs((string)$searchAjaxUrl) ?>');
         });
 
         $input.on('change', function (event) {
-            const previewUrl = '<?= $previewUrl ?>' + '?id=' + event.target.value;
+            const previewUrl = '<?= $escaper->escapeJs((string)$previewUrl) ?>' + '?id=' + event.target.value;
 
             $.ajax({
                 url: previewUrl,
@@ -66,7 +68,7 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
         });
 
         window.addEventListener('simple_search_grid.modal.close', function (event) {
-            if (event.detail.modalId !== '<?= $modalId ?>') {
+            if (event.detail.modalId !== '<?= $escaper->escapeJs((string)$modalId) ?>') {
                 return;
             }
 
@@ -82,24 +84,24 @@ $previewUrl = $block->getUrl($field->getLabelAjaxUrl());
         });
 
         window.addEventListener('simple_search_grid.search', function (event) {
-            const searchUrl ='<?= $block->getUrl($field->getSearchAjaxUrl(), [
+            const searchUrl ='<?= $escaper->escapeJs($block->getUrl($field->getSearchAjaxUrl(), [
                 'modal_id' => $modalId,
                 'field_id' => $fieldName,
-            ]) ?>' + 'search/' + event.detail.search + '/';
+            ])) ?>' + 'search/' + event.detail.search + '/';
             $iframe.attr('src', searchUrl);
         });
 
         <?php if (!empty($provider) && !empty($fieldName)): ?>
-        const component = registry.get('<?= $provider ?>');
-        const $field = $('#<?= $fieldName ?>');
+        const component = registry.get('<?= $escaper->escapeJs((string)$provider) ?>');
+        const $field = $('#<?= $escaper->escapeJs((string)$fieldName) ?>');
         if ($field) {
-            $field.val(component.data.<?= $fieldName ?>);
+            $field.val(component.data.<?= $escaper->escapeJs((string)$fieldName) ?>);
             $field.change(function () {
-                component.data.<?= $fieldName ?> = $field.val();
+                component.data.<?= $escaper->escapeJs((string)$fieldName) ?> = $field.val();
             });
             $field.trigger("change");
         } else {
-            console.warning('Field ID "<?= $fieldName ?>" does not exist');
+            console.warning('Field ID "<?= $escaper->escapeJs((string)$fieldName) ?>" does not exist');
         }
         <?php endif; ?>
     });

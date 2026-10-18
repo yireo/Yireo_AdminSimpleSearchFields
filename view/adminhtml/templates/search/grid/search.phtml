@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
 /** @var FieldInterface $field */
 $domId = str_replace('.', '-', $block->getNameInLayout());
 $searchId = $domId.'-search-input';
@@ -18,8 +20,8 @@ $search = $itemProvider->getSearch();
     <label class="data-grid-search-label" title="Search" for="fulltext">
         <span>Search</span>
     </label>
-    <input class="admin__control-text data-grid-search-control" type="text" id="<?= $searchId ?>"
-           placeholder="Search by keyword" value="<?= $search ?>" aria-label="Search by keyword"
+    <input class="admin__control-text data-grid-search-control" type="text" id="<?= $escaper->escapeHtmlAttr($searchId) ?>"
+           placeholder="Search by keyword" value="<?= $escaper->escapeHtmlAttr((string)$search) ?>" aria-label="Search by keyword"
            onChange="onSearch()">
     <button class="action-submit" type="button" aria-label="Search" onClick="onSearch()">
         <span>Search</span>
@@ -28,11 +30,11 @@ $search = $itemProvider->getSearch();
 
 <script>
     function onSearch() {
-        var search = document.getElementById('<?= $searchId ?>').value;
+        var search = document.getElementById('<?= $escaper->escapeJs($searchId) ?>').value;
         window.top.dispatchEvent(new CustomEvent('simple_search_grid.search', {
             detail: {
                 search: search,
-                fieldId: '<?= $fieldId ?>',
+                fieldId: '<?= $escaper->escapeJs($fieldId) ?>',
             }
         }));
     }

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
 /** @var FieldInterface $field */
 $field = $block->getField();
 $modalId = (string)$block->getRequest()->getParam('modal_id');
@@ -26,8 +28,8 @@ function getData($entity, $name) {
         <?php
         foreach ($fields as $fieldName => $fieldLabel): ?>
             <th class="data-grid-multicheck-cell _sortable _draggable">
-                <button style="background-color: inherit; color: inherit; border: none" onClick="reorder" data-field="<?= $fieldName ?>">
-                    <?= $fieldLabel ?>
+                <button style="background-color: inherit; color: inherit; border: none" onClick="reorder" data-field="<?= $escaper->escapeHtmlAttr((string)$fieldName) ?>">
+                    <?= $escaper->escapeHtml((string)$fieldLabel) ?>
                 </button>
             </th>
         <?php
@@ -43,13 +45,13 @@ function getData($entity, $name) {
             <tr class="data-row_even_row data-row_odd_row">
                 <?php
                 foreach ($fields as $fieldName => $fieldLabel): ?>
-                    <td onClick="onRowClick(<?= $item->getId() ?>)">
-                        <?= getData($item, $fieldName) ?>
+                    <td onClick="onRowClick(<?= (int)$item->getId() ?>)">
+                        <?= $escaper->escapeHtml((string)getData($item, $fieldName)) ?>
                     </td>
                 <?php
                 endforeach; ?>
                 <td>
-                    <button type="button" data-role="closeBtn" onClick="onRowClick(<?= $item->getId() ?>)">
+                    <button type="button" data-role="closeBtn" onClick="onRowClick(<?= (int)$item->getId() ?>)">
                         <span>Select</span>
                     </button>
                 </td>
@@ -75,13 +77,13 @@ function getData($entity, $name) {
     function onRowClick(itemId) {
         window.top.dispatchEvent(new CustomEvent('simple_search_grid.modal.close', {
             detail: {
-                modalId: '<?= $modalId ?>'
+                modalId: '<?= $escaper->escapeJs($modalId) ?>'
             }
         }));
         window.top.dispatchEvent(new CustomEvent('simple_search_grid.value.change', {
             detail: {
-                modalId: '<?= $modalId ?>',
-                fieldId: '<?= $fieldId ?>',
+                modalId: '<?= $escaper->escapeJs($modalId) ?>',
+                fieldId: '<?= $escaper->escapeJs($fieldId) ?>',
                 itemId: itemId
             }
         }));

@@ -1,14 +1,16 @@
 <?php
 declare(strict_types=1);
 
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
 ?>
 <script>
     window.yireoAdminSimpleSearchFields = {
-        customerLabelAjaxUrl: '<?= $block->getUrl('simple_search/preview/customer') ?>',
-        productLabelAjaxUrl: '<?= $block->getUrl('simple_search/preview/product') ?>',
-        orderLabelAjaxUrl: '<?= $block->getUrl('simple_search/preview/order') ?>'
+        customerLabelAjaxUrl: '<?= $escaper->escapeJs($block->getUrl('simple_search/preview/customer')) ?>',
+        productLabelAjaxUrl: '<?= $escaper->escapeJs($block->getUrl('simple_search/preview/product')) ?>',
+        orderLabelAjaxUrl: '<?= $escaper->escapeJs($block->getUrl('simple_search/preview/order')) ?>'
     };
 </script>

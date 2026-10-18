@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 use Yireo\AdminSimpleSearchFields\ViewModel\FieldInterface;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
 /** @var FieldInterface $field */
 $field = $block->getField();
 $provider = $block->getProvider();
@@ -19,8 +21,8 @@ $debug = false;
 ?>
     <div class="admin__field">
         <div class="admin__field-label">
-            <label for="<?= $fieldName ?>">
-                <span><?= $fieldLabel ?></span>
+            <label for="<?= $escaper->escapeHtmlAttr($fieldName) ?>">
+                <span><?= $escaper->escapeHtml((string)$fieldLabel) ?></span>
             </label>
         </div>
 
@@ -28,25 +30,25 @@ $debug = false;
             <div>
                 <div class="id-preview-container">
                     <div class="admin__control-addon id-preview">
-                        <input class="admin__control-text" type="text" id="<?= $fieldName ?>" name="<?= $fieldName ?>"
+                        <input class="admin__control-text" type="text" id="<?= $escaper->escapeHtmlAttr($fieldName) ?>" name="<?= $escaper->escapeHtmlAttr($fieldName) ?>"
                                placeholder="Numeric ID"
-                               value="<?= $fieldValue ?>" maxLength="11"/>
-                        <label class="admin__addon-suffix" for="<?= $fieldName ?>" id="<?= $fieldName ?>-preview">
-                            <span><?= __('No data found') ?></span>
+                               value="<?= $escaper->escapeHtmlAttr((string)$fieldValue) ?>" maxLength="11"/>
+                        <label class="admin__addon-suffix" for="<?= $escaper->escapeHtmlAttr($fieldName) ?>" id="<?= $escaper->escapeHtmlAttr($fieldName) ?>-preview">
+                            <span><?= $escaper->escapeHtml(__('No data found')) ?></span>
                         </label>
                     </div>
 
                     <div class="button">
                         <small>
                             <?php if ($debug): ?>
-                            <a href="<?= $searchAjaxUrl ?>">debug</a>
+                            <a href="<?= $escaper->escapeUrl($searchAjaxUrl) ?>">debug</a>
                             <?php endif; ?>
-                            <button class="<?= $fieldName ?>-search-modal-open">Search</button>
+                            <button class="<?= $escaper->escapeHtmlAttr($fieldName) ?>-search-modal-open">Search</button>
                         </small>
                     </div>
                 </div>
             </div>
-            <div id="<?= $modalId ?>" style="display:none;">
+            <div id="<?= $escaper->escapeHtmlAttr($modalId) ?>" style="display:none;">
                 <iframe class="simple_search"></iframe>
             </div>
         </div>
@@ -85,7 +87,7 @@ $debug = false;
         }
     </style>
 
-<?= $block->getLayout()->createBlock(Template::class)
+<?= /* @noEscape */ $block->getLayout()->createBlock(Template::class)
     ->setTemplate('Yireo_AdminSimpleSearchFields::search/field/script.phtml')
     ->setField($field)
     ->setFieldName($fieldName)
